@@ -1,6 +1,7 @@
 import { ROUTES_PATH } from "../constants/routes.js";
 import { formatDate, formatStatus } from "../app/format.js";
 import Logout from "./Logout.js";
+import VerticalLayout from "./VerticalLayout.js";
 
 export default class {
     constructor({ document, onNavigate, store, localStorage }) {
@@ -22,6 +23,7 @@ export default class {
                 );
             });
         new Logout({ document, localStorage, onNavigate });
+        new VerticalLayout({ document, localStorage, onNavigate });
     }
 
     handleClickNewBill = () => {
