@@ -160,11 +160,12 @@ export default class {
             this.counter++;
         }
 
-        bills.forEach((bill) => {
-            $(`#open-bill${bill.id}`).click((e) =>
-                this.handleEditTicket(e, bill, bills)
-            );
-            // Faire la correction pour la page admin ici (demander cht annuler click jquery)
+        const filtered = filteredBills(bills, getStatus(this.index));
+
+        filtered.forEach((bill) => {
+            $(`#open-bill${bill.id}`)
+                .off("click")
+                .on("click", (e) => this.handleEditTicket(e, bill, bills));
         });
 
         return bills;
