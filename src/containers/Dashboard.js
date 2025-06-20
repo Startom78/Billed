@@ -99,6 +99,7 @@ export default class {
     };
 
     handleEditTicket(e, bill, bills) {
+        console.log(bill.id);
         if (this.counter === undefined || this.id !== bill.id) this.counter = 0;
         if (this.id === undefined || this.id !== bill.id) this.id = bill.id;
         if (this.counter % 2 === 0) {
@@ -160,9 +161,7 @@ export default class {
             this.counter++;
         }
 
-        const filtered = filteredBills(bills, getStatus(this.index));
-
-        filtered.forEach((bill) => {
+        bills.forEach((bill) => {
             $(`#open-bill${bill.id}`)
                 .off("click")
                 .on("click", (e) => this.handleEditTicket(e, bill, bills));
