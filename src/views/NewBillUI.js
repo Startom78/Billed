@@ -2,7 +2,7 @@ import VerticalLayout from "./VerticalLayout.js";
 
 export default () => {
     return `
-    <div class='layout'>
+    <div class='layout' data-testid="page-new-bill">
       ${VerticalLayout(120)}
       <div class='content'>
         <div class='content-header'>
