@@ -3,8 +3,12 @@ import { formatDate, formatStatus } from "../app/format.js";
 import Logout from "./Logout.js";
 import VerticalLayout from "./VerticalLayout.js";
 
+let instanceId = 0;
 export default class {
     constructor({ document, onNavigate, store, localStorage }) {
+        instanceId++;
+        console.log("Bills %s", instanceId);
+        this.id = instanceId;
         this.document = document;
         this.onNavigate = onNavigate;
         this.store = store;
@@ -27,6 +31,7 @@ export default class {
     }
 
     handleClickNewBill = () => {
+        console.log("YOUPI", this.id);
         this.onNavigate(ROUTES_PATH["NewBill"]);
     };
 
