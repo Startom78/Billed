@@ -7,7 +7,6 @@ let instanceId = 0;
 export default class {
     constructor({ document, onNavigate, store, localStorage }) {
         instanceId++;
-        console.log("Bills %s", instanceId);
         this.id = instanceId;
         this.document = document;
         this.onNavigate = onNavigate;
@@ -31,7 +30,6 @@ export default class {
     }
 
     handleClickNewBill = () => {
-        console.log("YOUPI", this.id);
         this.onNavigate(ROUTES_PATH["NewBill"]);
     };
 
@@ -43,7 +41,11 @@ export default class {
             .html(
                 `<div style='text-align: center;' class="bill-proof-container"><img width=${imgWidth} src=${billUrl} alt="Bill" /></div>`
             );
-        $("#modaleFile").modal("show");
+
+        // /* istanbul ignore next */
+        if (typeof $("#modalFile").modal === "function") {
+            $("#modalFile").modal("show");
+        }
     };
 
     getBills = () => {
@@ -69,7 +71,6 @@ export default class {
                             };
                         }
                     });
-                    console.log("length", bills.length);
                     return bills;
                 });
         }
