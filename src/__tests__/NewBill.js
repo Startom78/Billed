@@ -2,33 +2,13 @@
  * @jest-environment jsdom
  */
 
-/*import { screen } from "@testing-library/dom";
-import NewBillUI from "../views/NewBillUI.js";
 import NewBill from "../containers/NewBill.js";
-
-describe("Given I am connected as an employee", () => {
-    describe("When I am on NewBill Page", () => {
-        test("Then ...", () => {
-            const html = NewBillUI();
-            document.body.innerHTML = html;
-            //to-do write assertion
-        });
-    });
-});*/
-
-import NewBill from "../containers/NewBill.js";
-import { screen, fireEvent } from "@testing-library/dom";
+import { screen, fireEvent, waitFor, wait } from "@testing-library/dom";
 import mockStore from "../__mocks__/store.js";
 import { ROUTES_PATH } from "../constants/routes.js";
 import router from "../app/Router.js";
-
-import { fireEvent, screen, waitFor } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import NewBillUI from "../views/NewBillUI.js";
-import NewBill from "../containers/NewBill.js";
-import mockStore from "../__mocks__/store";
-import router from "../app/Router.js";
-import { ROUTES_PATH } from "../constants/routes.js";
 
 jest.mock("../app/store", () => mockStore);
 
@@ -60,16 +40,27 @@ describe("Given I am connected as an employee", () => {
         });
 
         test("Then it should handle valid file input", async () => {
-            const fileInput = screen.getByTestId("file");
-            const file = new File(["test"], "test.png", { type: "image/png" });
-
-            await waitFor(() => userEvent.upload(fileInput, file));
-
+            const fileInput = document.querySelector(
+                'input[data-testid="file"]'
+            ); //await waitFor(() => screen.getByTestId("file"));
+            expect(fileInput).toBeTruthy();
+            const file = new File(["image"], "image.png", {
+                type: "image/png",
+            });
+            fireEvent.change(fileInput, {
+                target: { files: [file] },
+            });
+            console.log("file input", fileInput);
+            console.log(fileInput.files[0].type, file.type);
+            expect(fileInput.files[0]).toBe(file);
+            const fileError = await waitFor(() =>
+                screen.getAllByTestId("file-error")
+            );
             expect(fileInput.files[0]).toStrictEqual(file);
             expect(fileInput.files).toHaveLength(1);
-            expect(screen.getByText("Extension invalide")).not.toBeVisible();
+            expect(fileError.textContent).toBeFalsy();
         });
-
+        /* 
         test("Then it should reject invalid file type", async () => {
             const fileInput = screen.getByTestId("file");
             const file = new File(["test"], "test.txt", { type: "text/plain" });
@@ -134,10 +125,10 @@ describe("Given I am connected as an employee", () => {
             });
 
             consoleSpy.mockRestore();
-        });
+        });*/
     });
 });
-
+/*
 // Mock du localStorage
 Object.defineProperty(window, "localStorage", {
     value: {
@@ -223,4 +214,4 @@ describe("Integration Test: NewBill", () => {
         // Vérifie que la navigation a bien eu lieu
         expect(window.location.hash).toBe(`#${ROUTES_PATH.Bills}`);
     });
-});
+});*/

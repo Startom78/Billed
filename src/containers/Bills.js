@@ -41,10 +41,12 @@ export default class {
             .html(
                 `<div style='text-align: center;' class="bill-proof-container"><img width=${imgWidth} src=${billUrl} alt="Bill" /></div>`
             );
+        console.log("click");
 
         // /* istanbul ignore next */
-        if (typeof $("#modalFile").modal === "function") {
-            $("#modalFile").modal("show");
+        if (typeof $("#modaleFile").modal === "function") {
+            console.log("help");
+            $("#modaleFile").modal("show");
         }
     };
 

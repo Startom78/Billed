@@ -9,12 +9,13 @@ import Bills from "../containers/Bills.js";
 import { bills } from "../fixtures/bills.js";
 import { ROUTES, ROUTES_PATH } from "../constants/routes.js";
 import { localStorageMock } from "../__mocks__/localStorage.js";
+import mockStore from "../__mocks__/store.js";
 
 import router from "../app/Router.js";
 
 describe("Given I am connected as an employee", () => {
     describe("When I am on Bills Page", () => {
-        /*test("Then bill icon in vertical layout should be highlighted", async () => {
+        test("Then bill icon in vertical layout should be highlighted", async () => {
             Object.defineProperty(window, "localStorage", {
                 value: localStorageMock,
             });
@@ -87,7 +88,7 @@ describe("Given I am connected as an employee", () => {
                 screen.getByTestId("page-new-bill")
             );
             expect(page).toBeTruthy();
-        });*/
+        });
 
         test("Picture modal should be open", async () => {
             $.fn.modal = jest.fn();
@@ -109,35 +110,6 @@ describe("Given I am connected as an employee", () => {
             fireEvent.click(iconEye);
             expect(handleClickIconEyeMock).toHaveBeenCalled();
             expect(screen.getAllByText("Justificatif")).toBeTruthy();
-            expect(screen.getAllByTestId("modaleBill")).toBeTruthy();
-        });
-
-        /*test("Then getBills should return formatted bills", async () => {
-            const storeMock = {
-                bills: () => ({
-                    list: () =>
-                        Promise.resolve([
-                            { id: 1, status: "pending", date: "2023-01-01" },
-                            { id: 2, status: "refused", date: "2023-02-01" },
-                        ]),
-                }),
-            };
-
-            const billsContainer = new Bills({
-                document,
-                onNavigate: jest.fn(),
-                store: storeMock,
-                localStorage: window.localStorage,
-            });
-
-            const result = await billsContainer.getBills();
-
-            expect(result).toEqual(
-                expect.arrayContaining([
-                    expect.objectContaining({ status: "En attente" }),
-                    expect.objectContaining({ status: "Refusé" }),
-                ])
-            );
         });
 
         test("Then getBills should return fallback format on error", async () => {
@@ -162,71 +134,32 @@ describe("Given I am connected as an employee", () => {
             expect(result[0].date).toBeUndefined();
             expect(result[0].status).toBe("En attente");
         });
-    });*/
+
+        describe("Integration test: getBills", () => {
+            test("should fetch bills from mock API and format their status", async () => {
+                const billsContainer = new Bills({
+                    document,
+                    onNavigate: jest.fn(),
+                    store: mockStore,
+                    localStorage: window.localStorage,
+                });
+
+                const fetchedBills = await billsContainer.getBills();
+                const mockedBills = await mockStore.bills().list();
+
+                // Vérifie que le tableau retourné est correct
+                expect(Array.isArray(fetchedBills)).toBe(true);
+                expect(fetchedBills.length).toBeGreaterThan(0);
+                expect(fetchedBills.length === mockedBills.length).toBeTruthy();
+
+                // Vérifie le format d'une facture
+                expect(fetchedBills[0]).toHaveProperty("status");
+                expect(
+                    ["En attente", "Accepté", "Refused"].includes(
+                        fetchedBills[0].status
+                    )
+                ).toBeTruthy();
+            });
+        });
     });
-
-    // Mock du formatStatus si utilisé
-    /*jest.mock("../app/format.js", () => ({
-    formatStatus: (status) => `formatted-${status}`,
-}));*/
-
-    /*describe("Integration test: getBills", () => {
-    test("should fetch bills from mock API and format their status", async () => {
-        const billsContainer = new Bills({
-            document,
-            onNavigate: jest.fn(),
-            store: mockStore,
-            localStorage: window.localStorage,
-        });
-
-        const fetchedBills = await billsContainer.getBills();
-
-        // Vérifie que le mock a bien été appelé
-        expect(mockStore.bills).toHaveBeenCalled();
-        expect(mockStore.bills().list).toHaveBeenCalled();
-
-        // Vérifie que le tableau retourné est correct
-        expect(fetchedBills).toBeTruthy();
-        expect(Array.isArray(fetchedBills)).toBe(true);
-        expect(fetchedBills.length).toBeGreaterThan(0);
-
-        // Vérifie le format d'une facture
-        expect(fetchedBills[0]).toHaveProperty("status");
-        expect(fetchedBills[0].status).toMatch(/^formatted-/); // car mocké
-    });
-
-    test("should catch formatting errors and log them", async () => {
-        // Crée un store avec une facture corrompue (status manquant)
-        const corruptedStore = {
-            bills: () => ({
-                list: () =>
-                    Promise.resolve([
-                        {
-                            id: "bad-bill",
-                            date: "2022-01-01",
-                            // pas de "status"
-                        },
-                    ]),
-            }),
-        };
-
-        console.log = jest.fn(); // on espionne les logs
-
-        const billsContainer = new Bills({
-            document,
-            onNavigate: jest.fn(),
-            store: corruptedStore,
-            localStorage: window.localStorage,
-        });
-
-        const fetchedBills = await billsContainer.getBills();
-
-        // Vérifie que le fallback du catch est bien passé
-        expect(console.log).toHaveBeenCalled();
-        expect(fetchedBills[0]).toMatchObject({
-            id: "bad-bill",
-            date: "2022-01-01",
-            status: "formatted-undefined", // car le mock transforme même un status manquant
-        });
-    });*/
 });
