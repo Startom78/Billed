@@ -94,6 +94,7 @@ export default class NewBill {
                 };
                 this.updateBill(bill);
                 this.onNavigate(ROUTES_PATH["Bills"]);
+                console.log("navigate ici");
             })
             .catch((error) => console.error(error));
     };
