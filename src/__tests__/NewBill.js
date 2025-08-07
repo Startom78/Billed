@@ -28,7 +28,6 @@ describe("Given I am connected as an employee", () => {
             document.body.innerHTML = NewBillUI();
 
             const onNavigate = (pathname) => {
-                console.log("je suis appelé", pathname);
                 document.body.innerHTML = ROUTES({ pathname });
             };
 
@@ -61,10 +60,8 @@ describe("Given I am connected as an employee", () => {
         test("Then it should reject invalid file type", async () => {
             const fileInput = screen.getByTestId("file");
             const file = new File(["test"], "test.txt", { type: "text/plain" });
-            console.log(file);
 
             userEvent.upload(fileInput, file);
-            console.log(fileInput.value);
             const fileError = await waitFor(() =>
                 screen.getByTestId("file-error")
             );

@@ -23,12 +23,10 @@ export default class NewBill {
     handleChangeFile = (e) => {
         this.fileName = null;
         this.formData = null;
-        console.log(e.target);
         const file = e.target.files[0];
         const filePath = e.target.files[0].name.split(/\\/g);
         const fileName = filePath[filePath.length - 1];
         const fileParts = fileName.split(".");
-        console.log("file: ", fileParts, filePath, file.type, file.name);
         const fileExt = fileParts[fileParts.length - 1].toLowerCase();
         const fileError = this.document.querySelector(
             `div[data-testid="file-error"]`
@@ -61,7 +59,6 @@ export default class NewBill {
                 },
             })
             .then(({ fileUrl, key }) => {
-                console.log(fileUrl);
                 this.billId = key;
                 const bill = {
                     email,
@@ -94,7 +91,6 @@ export default class NewBill {
                 };
                 this.updateBill(bill);
                 this.onNavigate(ROUTES_PATH["Bills"]);
-                console.log("navigate ici");
             })
             .catch((error) => console.error(error));
     };
