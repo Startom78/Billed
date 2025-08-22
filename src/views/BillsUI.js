@@ -27,7 +27,6 @@ const rows = (data) => {
     const sorted = [...data].sort((a, b) => {
         return new Date(b.date) - new Date(a.date);
     });
-    console.log("je suis la " + sorted.map((a) => a.date));
     return sorted.map((bill) => row(bill)).join("");
 };
 

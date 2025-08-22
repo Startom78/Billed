@@ -3,8 +3,11 @@ import { formatDate, formatStatus } from "../app/format.js";
 import Logout from "./Logout.js";
 import VerticalLayout from "./VerticalLayout.js";
 
+let instanceId = 0;
 export default class {
     constructor({ document, onNavigate, store, localStorage }) {
+        instanceId++;
+        this.id = instanceId;
         this.document = document;
         this.onNavigate = onNavigate;
         this.store = store;
@@ -38,7 +41,11 @@ export default class {
             .html(
                 `<div style='text-align: center;' class="bill-proof-container"><img width=${imgWidth} src=${billUrl} alt="Bill" /></div>`
             );
-        $("#modaleFile").modal("show");
+
+        // /* istanbul ignore next */
+        if (typeof $("#modaleFile").modal === "function") {
+            $("#modaleFile").modal("show");
+        }
     };
 
     getBills = () => {
@@ -64,7 +71,6 @@ export default class {
                             };
                         }
                     });
-                    console.log("length", bills.length);
                     return bills;
                 });
         }
